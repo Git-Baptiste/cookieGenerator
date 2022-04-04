@@ -1,7 +1,8 @@
 const affichage = document.querySelector('.affichage');
 const btns = document.querySelectorAll('button');
 const inputs = document.querySelectorAll('input');
-const infoTxt = document.querySelector('info-txt');
+const infoTxt = document.querySelector('.info-txt');
+let dejaFait = false;
 
 const today = new Date();
 const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
@@ -37,4 +38,43 @@ function btnAction(e){
         listeCookie();
     }
     
+}
+
+
+function creerCookie(name, value, exp){
+
+    // Si on créé un cookie avec un nom déjà existant
+    let cookies = document.cookie.split(';');
+    cookies.forEach(cookie => {
+        cookie = cookie.trim();
+        // console.log(cookie);
+        let formatCookie = cookie.split('=');
+        if(formatCookie[0] === encodeURIComponent(name)){
+            dejaFait = true;
+        }
+        
+    })
+
+    if(dejaFait){
+        infoTxt.innerText = `Un cookie possède déjà ce nom.`;
+        dejaFait = false;
+        return;
+    }
+
+    infoTxt.innerText = "";
+
+    // Pour un cookie qui n'a pas de nom:
+    if(name.length === 0) {
+        infoTxt.innerText = `Impossible de créer le cookie. Veuillez lui donner une nom.`;
+        return;
+    }
+
+    document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; expires=${exp.toUTCString()}`;
+    let info = document.createElement('li');
+    info.innerText = `Cookie ${name} créé avec succès.`;
+    affichage.appendChild(info);
+    setTimeout(() => {
+        info.remove();
+    }, 2000);
+
 }
