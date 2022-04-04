@@ -43,6 +43,12 @@ function btnAction(e){
 
 function creerCookie(name, value, exp){
 
+    infoTxt.innerText = "";
+    affichage.innerHTML = "";
+    // affichage.childNodes.forEach(child => {
+    //     child.remove();
+    // })
+
     // Si on créé un cookie avec un nom déjà existant
     let cookies = document.cookie.split(';');
     cookies.forEach(cookie => {
@@ -61,7 +67,7 @@ function creerCookie(name, value, exp){
         return;
     }
 
-    infoTxt.innerText = "";
+    
 
     // Pour un cookie qui n'a pas de nom:
     if(name.length === 0) {
@@ -76,5 +82,40 @@ function creerCookie(name, value, exp){
     setTimeout(() => {
         info.remove();
     }, 2000);
+
+}
+
+function listeCookie(){
+
+    let cookies = document.cookie.split(';');
+    if(cookies.join() === ""){
+        infoTxt.innerText = `Pas de cookie à afficher`;
+        return;
+    }
+
+    cookies.forEach(cookie => {
+
+        cookie = cookie.trim();
+        let formatCookie = cookie.split('=');
+        // console.log(formatCookie);
+
+        let item = document.createElement('li');
+
+        infoTxt.innerText = 'Cliquez sur une cookie pour le supprimer de la liste.'
+        item.innerText = `Nom: ${decodeURIComponent(formatCookie[0])} - Valeur : ${decodeURIComponent(formatCookie[1])}`;
+        affichage.appendChild(item);
+
+        // Supprimer un cookie de la liste
+        item.addEventListener('click', () => {
+
+            document.cookie = `${formatCookie[0]}=; expires=${new Date(0)}`;
+            item.innerText = `Le cookie ${formatCookie[0]} est supprimé `;
+            setTimeout(() => {
+                item.remove();
+            }, 1000);
+
+        })
+
+    })
 
 }
